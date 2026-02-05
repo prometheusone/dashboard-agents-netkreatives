@@ -1,0 +1,84 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-layout {
+  flex: 1;
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+/* Layout configurations */
+.layout-both {
+  grid-template-columns: 280px 1fr 400px;
+  grid-template-areas: "agents board chat";
+}
+
+.layout-board {
+  grid-template-columns: 280px 1fr;
+  grid-template-areas: "agents board";
+}
+
+.layout-chat {
+  grid-template-columns: 280px 1fr;
+  grid-template-areas: "agents chat";
+}
+
+.agent-sidebar {
+  grid-area: agents;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.task-board-container {
+  grid-area: board;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.chat-container {
+  grid-area: chat;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+/* Mobile responsive */
+@media (max-width: 1200px) {
+  .layout-both {
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      "agents"
+      "board"
+      "chat";
+  }
+  
+  .agent-sidebar {
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-layout {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  .layout-both,
+  .layout-board,
+  .layout-chat {
+    grid-template-columns: 1fr;
+  }
+  
+  .agent-sidebar {
+    padding: 0.75rem;
+  }
+}

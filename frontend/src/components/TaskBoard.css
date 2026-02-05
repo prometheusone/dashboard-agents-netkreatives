@@ -1,0 +1,62 @@
+.task-board {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 12px 12px 0 0;
+}
+
+.board-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.btn-primary {
+  padding: 0.5rem 1rem;
+  background: var(--info);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.board-columns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex: 1;
+}
+
+/* Mobile responsive */
+@media (max-width: 1200px) {
+  .board-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .board-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .board-header h2 {
+    font-size: 1rem;
+  }
+}

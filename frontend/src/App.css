@@ -1,0 +1,29 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 1rem;
+  padding: 1rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Mobile responsive */
+@media (max-width: 1200px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control - Agent Dashboard</title>
+    <link rel="stylesheet" href="/static/public/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <span class="logo">⚙️</span>
+                <h1>MISSION CONTROL</h1>
+                <span class="status-dot"></span>
+            </div>
+            <div class="header-stats" id="headerStats">
+                <div class="stat">
+                    <span class="stat-value">--</span>
+                    <span class="stat-label">AGENTS</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">--</span>
+                    <span class="stat-label">TASKS</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">--</span>
+                    <span class="stat-label">ACTIVE</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <button class="nav-btn active" data-view="tasks" title="Tasks">
+                <span class="icon">📋</span>
+                <span class="label">Tasks</span>
+            </button>
+            <button class="nav-btn" data-view="chat" title="Squad Chat">
+                <span class="icon">💬</span>
+                <span class="label">Chat</span>
+            </button>
+            <button class="nav-btn" data-view="agents" title="Agents">
+                <span class="icon">🤖</span>
+                <span class="label">Agents</span>
+            </button>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Tasks View -->
+            <div class="view active" id="tasksView">
+                <h2 class="view-title">📋 Mission Queue</h2>
+                <div class="task-board" id="taskBoard">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading tasks...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Squad Chat View -->
+            <div class="view" id="chatView">
+                <h2 class="view-title">💬 Squad Chat</h2>
+                
+                <!-- Agent Filters -->
+                <div class="chat-filters">
+                    <button class="filter-btn active" data-filter="all">All Agents</button>
+                    <button class="filter-btn" data-filter="main">🐉 Main</button>
+                    <button class="filter-btn" data-filter="builder">🔨 Builder</button>
+                    <button class="filter-btn" data-filter="reviewer">🔍 Reviewer</button>
+                    <button class="filter-btn" data-filter="utility">⚡ Utility</button>
+                    <button class="filter-btn" data-filter="lead">👑 Lead</button>
+                </div>
+                
+                <!-- Chat Timeline -->
+                <div class="chat-timeline" id="chatTimeline">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading messages...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agents View -->
+            <div class="view" id="agentsView">
+                <h2 class="view-title">🤖 Agent Status</h2>
+                <div class="agent-grid" id="agentGrid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading agents...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/public/app.js"></script>
+</body>
+</html>
