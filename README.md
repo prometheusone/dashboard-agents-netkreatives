@@ -1,184 +1,195 @@
-# Mission Control Dashboard
+# Mission Control UI
 
-Unified dashboard for agent coordination at dashboard.agents.netkreatives.com
+**The unified dashboard for agent tasks, squad chat, and agent status.**
+
+Live at: `https://dashboard.agents.netkreatives.com`
 
 ## Features
 
-### 📋 Tasks View
-- Kanban board with task columns (Inbox → Ready → In Progress → Review → Done)
-- Task cards showing title, description, assigned agents
-- Real-time task status updates from Convex
+### 🎯 Three Main Views
 
-### 💬 Squad Chat
-- Real-time agent-to-agent message timeline
-- Agent filtering (All / Main / Builder / Reviewer / Utility / Lead)
-- Visual agent distinction with emojis and color-coded borders:
-  - 🐉 Main (purple)
-  - 🔨 Builder (amber)
-  - 🔍 Reviewer (blue)
-  - ⚡ Utility (yellow)
-  - 👑 Lead (pink)
-- Status badges: ✅ Complete | 🛠 Working | ⏸ Blocked | ❌ Error | 👀 Review
-- Handoff detection and highlighting
-- Relative timestamps ("5m ago", "yesterday")
+1. **Tasks (Kanban Board)**
+   - Four columns: Ready | In Progress | Blocked | Complete
+   - Drag-and-drop task management
+   - Filter by agent, priority, status
+   - Click tasks for detailed modal view
+   - Visual dependency indicators
+   - Real-time updates
 
-### 🤖 Agents View
-- Grid of active agents with status indicators
-- Current task display per agent
-- Last heartbeat timestamps
-- Status badges (working/idle/offline)
+2. **Squad Chat (Timeline)**
+   - Chronological agent messages
+   - Visual agent distinction (emojis + colors)
+   - Handoff notifications highlighted
+   - @mention detection
+   - Grouped by day
+   - Real-time WebSocket updates
 
-## Architecture
+3. **Agent Status**
+   - Online/offline status
+   - Current task display
+   - Last heartbeat time
+   - Agent health metrics (green/yellow/red)
+   - Quick actions (assign task, send message, view details)
+   - Agent capabilities badges
 
-**Backend:** Bun + Hono  
-**Frontend:** Vanilla JavaScript + CSS  
-**Data:** Convex (patient-badger-824)  
-**Deployment:** Coolify + Docker
+### ⌨️ Keyboard Shortcuts
 
-### Data Flow
-```
-Convex Backend
-    ↓ HTTP API
-Hono Server (Bun)
-    ↓ REST API
-Frontend (Vanilla JS)
-    ↓ Auto-refresh (15s)
-UI Updates
-```
+- `/` - Focus search
+- `1` - Switch to Tasks view
+- `2` - Switch to Squad Chat view
+- `3` - Switch to Agent Status view
+- `Esc` - Close modal
+
+### 🎨 Design Principles
+
+- **Dark theme** - Easy on the eyes, consistent with existing agent sites
+- **Real-time updates** - WebSocket connections, not polling
+- **Mobile responsive** - Works on all screen sizes
+- **Fast performance** - <100ms interactions
+- **Clean & minimal** - No clutter, important info prominent
+
+## Tech Stack
+
+### Frontend
+- **React** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool & dev server
+- **@tanstack/react-query** - Data fetching & caching
+- **@dnd-kit** - Drag-and-drop for Kanban board
+- **WebSocket** - Real-time updates
+
+### Backend
+- **Bun** - JavaScript runtime
+- **Hono** - Web framework
+- **Convex** - Backend database & real-time sync
+  - Deployment: `beaming-basilisk-326.convex.cloud`
+  - Tables: `tasks`, `agents`, `logs`, `messages`
 
 ## Development
+
+### Prerequisites
+- Bun installed (`curl -fsSL https://bun.sh/install | bash`)
+- Convex deployment key
+
+### Setup
 
 ```bash
 # Install dependencies
 bun install
 
-# Start development server
-bun dev
+# Set up environment
+cp .env.example .env
+# Edit .env and add your CONVEX_DEPLOY_KEY
 
-# Access at http://localhost:3000
+# Run development server
+bun run dev          # Backend (port 3000)
+bun run dev:client   # Frontend (port 5173)
 ```
 
-## Environment Variables
+### Build
 
 ```bash
-PORT=3000
-CONVEX_URL=https://patient-badger-824.convex.cloud
-NODE_ENV=production
+# Build for production
+bun run build
+
+# Run production build
+bun run start
 ```
 
-## API Endpoints
+### Docker
 
-### GET /api/chat/messages
-Fetch recent agent messages for Squad Chat.
+```bash
+# Build image
+docker build -t mission-control-ui .
 
-**Query params:**
-- `limit` (default: 50)
-- `since` (timestamp filter)
-
-**Response:**
-```json
-{
-  "success": true,
-  "messages": [...],
-  "count": 42
-}
+# Run container
+docker run -p 3000:3000 \
+  -e CONVEX_DEPLOYMENT=beaming-basilisk-326 \
+  -e CONVEX_DEPLOY_KEY=your_key_here \
+  mission-control-ui
 ```
-
-### GET /api/tasks
-Fetch all tasks from Convex.
-
-### GET /api/agents
-Fetch all registered agents with status.
-
-### GET /api/handoffs
-Fetch tasks with active handoffs or blocked status.
-
-### GET /health
-Health check endpoint.
 
 ## Deployment
 
-**Target:** dashboard.agents.netkreatives.com
+Deployed via Coolify to `dashboard.agents.netkreatives.com`
 
-**Via Coolify:**
-1. Repository: prometheusone/dashboard-agents-netkreatives
-2. Branch: main
-3. Build Pack: Dockerfile
-4. Port: 3000
-5. Environment: Set `CONVEX_URL`
-6. Deploy
+- **Coolify UUID:** `tgwo840og04kgwwso44k8w0g`
+- **GitHub Repo:** `prometheusone/dashboard-agents-netkreatives`
+- **Auto-deploy:** Push to `main` branch triggers deployment
 
-**Docker:**
-```bash
-docker build -t mission-control-dashboard .
-docker run -p 3000:3000 -e CONVEX_URL=https://patient-badger-824.convex.cloud mission-control-dashboard
-```
+## API Endpoints
+
+### Tasks
+- `GET /api/tasks` - Get all tasks
+- `GET /api/tasks?status=ready` - Get tasks by status
+- `GET /api/tasks/:id` - Get single task
+- `POST /api/tasks/:id/status` - Update task status
+
+### Agents
+- `GET /api/agents` - Get all agents
+- `GET /api/agents/:id` - Get single agent
+
+### Logs
+- `GET /api/logs?limit=100` - Get recent logs
+
+### Health
+- `GET /api/health` - Health check
+
+## Data Sources
+
+All data comes from Convex backend:
+
+- **Tasks table** - All task data with status, priority, assignments
+- **Agents table** - Agent status, heartbeats, current tasks
+- **Logs table** - Agent activity messages
+- **Messages table** - Task-specific messages (future use)
 
 ## Project Structure
 
 ```
 dashboard-agents-netkreatives/
 ├── src/
-│   └── server.ts           # Bun + Hono backend
-├── public/
-│   ├── index.html          # Main dashboard UI
-│   ├── style.css           # Dark theme styling
-│   └── app.js              # Frontend application logic
-├── Dockerfile              # Production container
-├── package.json            # Dependencies
-└── README.md               # This file
+│   ├── client/                 # Frontend code
+│   │   ├── components/         # React components
+│   │   │   ├── TasksView.tsx   # Kanban board
+│   │   │   ├── TaskColumn.tsx  # Kanban column
+│   │   │   ├── TaskCard.tsx    # Task card
+│   │   │   ├── TaskModal.tsx   # Task detail modal
+│   │   │   ├── SquadChat.tsx   # Chat timeline
+│   │   │   └── AgentStatus.tsx # Agent status grid
+│   │   ├── api/                # API functions
+│   │   ├── hooks/              # Custom React hooks
+│   │   ├── utils/              # Utility functions
+│   │   ├── styles/             # CSS styles
+│   │   ├── App.tsx             # Main app component
+│   │   └── main.tsx            # Entry point
+│   └── server/                 # Backend code
+│       ├── routes/             # API routes
+│       └── index.ts            # Server entry
+├── index.html                  # HTML template
+├── vite.config.ts              # Vite config
+├── tsconfig.json               # TypeScript config
+├── package.json                # Dependencies
+├── Dockerfile                  # Docker build
+└── README.md                   # This file
 ```
 
-## UI Sections
+## Future Enhancements
 
-**Sidebar Navigation:**
-- 📋 Tasks
-- 💬 Chat  
-- 🤖 Agents
+- [ ] Task creation/editing from UI
+- [ ] Direct messaging between agents
+- [ ] Notification system
+- [ ] Advanced filtering (by tags, date range)
+- [ ] Export tasks to CSV/JSON
+- [ ] Dark/light theme toggle
+- [ ] Audio alerts for critical events
+- [ ] Task analytics dashboard
+- [ ] Agent performance metrics
 
-**Header Stats:**
-- Total agents count
-- Total tasks count
-- Active tasks count
-- Pulsing green status dot (online indicator)
+## Support
 
-## Real-time Updates
-
-- Auto-refresh every 15 seconds
-- Fetches latest data from Convex
-- Updates all views automatically
-- No manual refresh needed
-
-## Dark Theme
-
-Color scheme:
-- Background: #0f172a (dark blue)
-- Secondary: #1e293b
-- Text: #e2e8f0 (light gray)
-- Accent: #10b981 (green)
-- Borders: #334155
-
-Optimized for readability and reduced eye strain.
-
-## Mobile Responsive
-
-- Sidebar collapses to horizontal navigation on mobile
-- Touch-friendly buttons and cards
-- Optimized layout for small screens
-
-## Browser Support
-
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
-## License
-
-UNLICENSED - Private project for Netkreatives
+For issues or questions, contact Kurt or create an issue in the GitHub repo.
 
 ---
 
-**Last Updated:** 2026-02-05  
-**Deployment:** dashboard.agents.netkreatives.com  
-**Repository:** https://github.com/prometheusone/dashboard-agents-netkreatives
+Built with ❤️ for the Netkreatives agent squad
