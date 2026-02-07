@@ -65,17 +65,15 @@ function TaskModal({ task, onClose, onUpdate }: TaskModalProps) {
             </div>
           )}
 
-          {/* Assigned Agents */}
-          {task.assignedAgents && task.assignedAgents.length > 0 && (
+          {/* Assigned Agent */}
+          {task.assignedAgent && (
             <div className="task-detail-section">
-              <h3>Assigned Agents</h3>
+              <h3>Assigned Agent</h3>
               <div className="agent-list">
-                {task.assignedAgents.map((agent: string) => (
-                  <div key={agent} className="agent-item">
-                    <span className="agent-emoji">{AGENT_EMOJIS[agent] || '🤖'}</span>
-                    <span className="agent-name">{agent}</span>
-                  </div>
-                ))}
+                <div className="agent-item">
+                  <span className="agent-emoji">{AGENT_EMOJIS[task.assignedAgent] || '🤖'}</span>
+                  <span className="agent-name">{task.assignedAgent}</span>
+                </div>
               </div>
             </div>
           )}
@@ -160,29 +158,34 @@ function TaskModal({ task, onClose, onUpdate }: TaskModalProps) {
           </div>
 
           {/* GitHub Links */}
-          {(task.githubIssue || task.githubPR) && (
+          {(task.prUrl || task.branch || task.repo) && (
             <div className="task-detail-section">
               <h3>GitHub</h3>
               <div className="github-links">
-                {task.githubIssue && (
+                {task.repo && (
                   <a
-                    href={`https://github.com/${task.repo}/issues/${task.githubIssue}`}
+                    href={`https://github.com/${task.repo}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="github-link"
                   >
-                    Issue #{task.githubIssue}
+                    {task.repo}
                   </a>
                 )}
-                {task.githubPR && (
+                {task.prUrl && (
                   <a
-                    href={`https://github.com/${task.repo}/pull/${task.githubPR}`}
+                    href={task.prUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="github-link"
                   >
-                    PR #{task.githubPR}
+                    PR #{task.prNumber}
                   </a>
+                )}
+                {task.branch && (
+                  <span className="github-link">
+                    Branch: {task.branch}
+                  </span>
                 )}
               </div>
             </div>

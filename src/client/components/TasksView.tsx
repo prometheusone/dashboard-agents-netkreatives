@@ -11,9 +11,9 @@ interface TasksViewProps {
 }
 
 const COLUMNS = [
-  { id: 'ready', title: 'Ready', icon: '🎯' },
+  { id: 'pending', title: 'Pending', icon: '🎯' },
   { id: 'in_progress', title: 'In Progress', icon: '🚀' },
-  { id: 'blocked', title: 'Blocked', icon: '🚧' },
+  { id: 'failed', title: 'Failed', icon: '❌' },
   { id: 'done', title: 'Complete', icon: '✅' },
 ]
 
@@ -45,8 +45,8 @@ function TasksView({ searchQuery }: TasksViewProps) {
       task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       task.description?.toLowerCase().includes(searchQuery.toLowerCase())
     
-    const matchesAgent = !filterAgent || 
-      task.assignedAgents?.includes(filterAgent)
+    const matchesAgent = !filterAgent ||
+      task.assignedAgent === filterAgent
     
     const matchesPriority = !filterPriority || 
       task.priority === filterPriority

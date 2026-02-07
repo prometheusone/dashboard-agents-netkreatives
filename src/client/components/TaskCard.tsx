@@ -50,11 +50,11 @@ function TaskCard({ task, onClick, isDragging }: TaskCardProps) {
           title={task.priority}
         />
         <div className="task-meta">
-          {task.assignedAgents?.map((agent: string) => (
-            <span key={agent} className="agent-badge" title={agent}>
-              {AGENT_EMOJIS[agent] || '🤖'}
+          {task.assignedAgent && (
+            <span className="agent-badge" title={task.assignedAgent}>
+              {AGENT_EMOJIS[task.assignedAgent] || '🤖'}
             </span>
-          ))}
+          )}
         </div>
       </div>
 
